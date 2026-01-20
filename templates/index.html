@@ -85,6 +85,11 @@
             background: #3a7bc8;
         }
 
+        .btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.4);
+        }
+
         .btn-danger {
             background: #e74c3c;
         }
@@ -93,9 +98,15 @@
             background: #c0392b;
         }
 
+        .btn-danger:focus {
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.4);
+        }
+
         .btn-small {
-            padding: 6px 12px;
+            padding: 10px 16px;
             font-size: 12px;
+            min-height: 44px;
+            min-width: 44px;
         }
 
         /* 文字输入 */
@@ -113,6 +124,14 @@
         .text-input:focus {
             outline: none;
             border-color: #4a90d9;
+            box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.2);
+        }
+
+        .hint {
+            display: block;
+            color: #999;
+            font-size: 12px;
+            margin-bottom: 12px;
         }
 
         /* 列表 */
@@ -280,8 +299,9 @@
 
         <!-- 分享文字 -->
         <div class="card">
-            <h2>分享文字</h2>
-            <textarea class="text-input" id="textInput" placeholder="粘贴或输入要分享的文字..."></textarea>
+            <h2><label for="textInput">分享文字</label></h2>
+            <textarea class="text-input" id="textInput" placeholder="粘贴或输入要分享的文字..." aria-describedby="textHint"></textarea>
+            <small id="textHint" class="hint">按 Ctrl+Enter 快速发送</small>
             <button class="btn" onclick="addText()">分享</button>
         </div>
 
@@ -443,6 +463,8 @@
 
         // 删除文字
         function deleteText(id) {
+            if (!confirm('确定删除该文字？')) return;
+
             fetch('/text/' + id, { method: 'DELETE' })
                 .then(res => res.json())
                 .then(data => {

@@ -12,7 +12,7 @@ app = Flask(__name__)
 # 配置
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads')
 TEXT_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'texts.json')
-MAX_CONTENT_LENGTH = 5000 * 1024 * 1024  # 500MB
+MAX_CONTENT_LENGTH = 500000 * 1024 * 1024  # 500MB
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
