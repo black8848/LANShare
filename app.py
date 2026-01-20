@@ -121,14 +121,15 @@ def add_text():
     if not content:
         return jsonify({'error': '内容不能为空'}), 400
 
-    texts = load_texts()
-    texts.insert(0, {
+    text_item = {
         'id': str(uuid.uuid4())[:8],
         'content': content,
         'time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    })
+    }
+    texts = load_texts()
+    texts.insert(0, text_item)
     save_texts(texts)
-    return jsonify({'success': True})
+    return jsonify({'success': True, 'text': text_item})
 
 
 @app.route('/text/<text_id>', methods=['DELETE'])

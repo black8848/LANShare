@@ -70,7 +70,9 @@
         }
 
         .btn {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             padding: 10px 24px;
             background: #4a90d9;
             color: white;
@@ -79,6 +81,11 @@
             cursor: pointer;
             font-size: 14px;
             transition: background 0.2s;
+        }
+
+        .btn svg {
+            width: 16px;
+            height: 16px;
         }
 
         .btn:hover {
@@ -212,7 +219,18 @@
         .empty {
             text-align: center;
             color: #999;
-            padding: 30px;
+            padding: 40px 30px;
+        }
+
+        .empty svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 12px;
+            opacity: 0.4;
+        }
+
+        .empty p {
+            margin: 0;
         }
 
         /* 进度条 */
@@ -275,6 +293,98 @@
                 padding: 30px 20px;
             }
         }
+
+        /* Dark Mode */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #1a1a1a;
+                color: #e5e5e5;
+            }
+
+            h1 {
+                color: #f5f5f5;
+            }
+
+            .card {
+                background: #2a2a2a;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            }
+
+            .card h2 {
+                color: #aaa;
+            }
+
+            .upload-zone {
+                border-color: #444;
+            }
+
+            .upload-zone:hover, .upload-zone.dragover {
+                border-color: #5a9fe9;
+                background: #333;
+            }
+
+            .upload-zone p {
+                color: #777;
+            }
+
+            .text-input {
+                background: #333;
+                border-color: #444;
+                color: #e5e5e5;
+            }
+
+            .text-input:focus {
+                border-color: #5a9fe9;
+            }
+
+            .text-input::placeholder {
+                color: #666;
+            }
+
+            .list-item {
+                border-bottom-color: #3a3a3a;
+            }
+
+            .list-item .name {
+                color: #e5e5e5;
+            }
+
+            .list-item .meta {
+                color: #777;
+            }
+
+            .text-item {
+                background: #333;
+            }
+
+            .text-item .content {
+                color: #e5e5e5;
+            }
+
+            .text-item .footer {
+                border-top-color: #444;
+            }
+
+            .text-item .time {
+                color: #777;
+            }
+
+            .empty {
+                color: #666;
+            }
+
+            .hint {
+                color: #666;
+            }
+
+            .progress-bar {
+                background: #333;
+            }
+
+            .toast {
+                background: #444;
+            }
+        }
     </style>
 </head>
 <body>
@@ -287,7 +397,12 @@
             <div class="upload-zone" id="uploadZone">
                 <p>点击或拖拽文件到这里上传</p>
                 <input type="file" id="fileInput" multiple>
-                <button class="btn">选择文件</button>
+                <button class="btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                    </svg>
+                    选择文件
+                </button>
             </div>
             <div class="progress" id="progress">
                 <div class="progress-bar">
@@ -302,7 +417,12 @@
             <h2><label for="textInput">分享文字</label></h2>
             <textarea class="text-input" id="textInput" placeholder="粘贴或输入要分享的文字..." aria-describedby="textHint"></textarea>
             <small id="textHint" class="hint">按 Ctrl+Enter 快速发送</small>
-            <button class="btn" onclick="addText()">分享</button>
+            <button class="btn" onclick="addText()">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                </svg>
+                分享
+            </button>
         </div>
 
         <!-- 文件列表 -->
@@ -317,14 +437,29 @@
                         <div class="meta">{{ file.size }} · {{ file.time }}</div>
                     </div>
                     <div class="actions">
-                        <a href="/download/{{ file.name }}" class="btn btn-small">下载</a>
-                        <button class="btn btn-small btn-danger" onclick="deleteFile('{{ file.name }}')">删除</button>
+                        <a href="/download/{{ file.name }}" class="btn btn-small">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                            </svg>
+                            下载
+                        </a>
+                        <button class="btn btn-small btn-danger" onclick="deleteFile('{{ file.name }}')">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                            </svg>
+                            删除
+                        </button>
                     </div>
                 </li>
                 {% endfor %}
             </ul>
             {% else %}
-            <div class="empty">暂无文件</div>
+            <div class="empty">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+                </svg>
+                <p>暂无文件</p>
+            </div>
             {% endif %}
         </div>
 
@@ -339,15 +474,30 @@
                     <div class="footer">
                         <span class="time">{{ text.time }}</span>
                         <div>
-                            <button class="btn btn-small" onclick="copyText(this)">复制</button>
-                            <button class="btn btn-small btn-danger" onclick="deleteText('{{ text.id }}')">删除</button>
+                            <button class="btn btn-small" onclick="copyText(this)">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+                                </svg>
+                                复制
+                            </button>
+                            <button class="btn btn-small btn-danger" onclick="deleteText('{{ text.id }}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                </svg>
+                                删除
+                            </button>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
             </div>
             {% else %}
-            <div class="empty">暂无分享的文字</div>
+            <div class="empty">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+                </svg>
+                <p>暂无分享的文字</p>
+            </div>
             {% endif %}
         </div>
     </div>
@@ -391,6 +541,7 @@
 
             let uploaded = 0;
             const total = files.length;
+            const uploadedFiles = [];
 
             progress.style.display = 'block';
 
@@ -410,9 +561,20 @@
 
                 xhr.addEventListener('load', () => {
                     uploaded++;
+                    const res = JSON.parse(xhr.responseText);
+                    if (res.success) {
+                        uploadedFiles.push({
+                            name: res.filename,
+                            size: formatSize(file.size),
+                            time: new Date().toLocaleString('zh-CN', { hour12: false }).replace(/\//g, '-')
+                        });
+                    }
                     if (uploaded === total) {
+                        progress.style.display = 'none';
+                        progressFill.style.width = '0%';
                         showToast('上传完成');
-                        setTimeout(() => location.reload(), 500);
+                        uploadedFiles.forEach(f => addFileToList(f));
+                        fileInput.value = '';
                     }
                 });
 
@@ -425,6 +587,64 @@
             });
         }
 
+        // 格式化文件大小
+        function formatSize(size) {
+            const units = ['B', 'KB', 'MB', 'GB'];
+            let i = 0;
+            while (size >= 1024 && i < units.length - 1) {
+                size /= 1024;
+                i++;
+            }
+            return size.toFixed(1) + ' ' + units[i];
+        }
+
+        // 添加文件到列表
+        function addFileToList(file) {
+            const fileList = document.getElementById('fileList');
+            const emptyState = document.querySelector('.card:nth-child(3) .empty');
+
+            if (emptyState) {
+                emptyState.remove();
+                const ul = document.createElement('ul');
+                ul.className = 'list';
+                ul.id = 'fileList';
+                document.querySelector('.card:nth-child(3)').appendChild(ul);
+            }
+
+            const li = document.createElement('li');
+            li.className = 'list-item';
+            li.innerHTML = `
+                <div class="info">
+                    <div class="name">${escapeHtml(file.name)}</div>
+                    <div class="meta">${file.size} · ${file.time}</div>
+                </div>
+                <div class="actions">
+                    <a href="/download/${encodeURIComponent(file.name)}" class="btn btn-small">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                        </svg>
+                        下载
+                    </a>
+                    <button class="btn btn-small btn-danger" onclick="deleteFile('${escapeHtml(file.name)}')">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                        </svg>
+                        删除
+                    </button>
+                </div>
+            `;
+
+            const list = document.getElementById('fileList');
+            list.insertBefore(li, list.firstChild);
+        }
+
+        // HTML 转义
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         // 删除文件
         function deleteFile(filename) {
             if (!confirm('确定删除该文件？')) return;
@@ -434,14 +654,34 @@
                 .then(data => {
                     if (data.success) {
                         showToast('已删除');
-                        location.reload();
+                        const items = document.querySelectorAll('#fileList .list-item');
+                        items.forEach(item => {
+                            if (item.querySelector('.name').textContent === filename) {
+                                item.remove();
+                            }
+                        });
+                        // 如果列表为空，显示空状态
+                        const fileList = document.getElementById('fileList');
+                        if (fileList && fileList.children.length === 0) {
+                            fileList.remove();
+                            const card = document.querySelector('.card:nth-child(3)');
+                            card.innerHTML += `
+                                <div class="empty">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+                                    </svg>
+                                    <p>暂无文件</p>
+                                </div>
+                            `;
+                        }
                     }
                 });
         }
 
         // 添加文字
         function addText() {
-            const content = document.getElementById('textInput').value.trim();
+            const textInput = document.getElementById('textInput');
+            const content = textInput.value.trim();
             if (!content) {
                 showToast('请输入内容');
                 return;
@@ -456,9 +696,50 @@
             .then(data => {
                 if (data.success) {
                     showToast('已分享');
-                    location.reload();
+                    textInput.value = '';
+                    addTextToList(data.text);
                 }
             });
+        }
+
+        // 添加文字到列表
+        function addTextToList(text) {
+            const textList = document.getElementById('textList');
+            const emptyState = document.querySelector('.card:nth-child(4) .empty');
+
+            if (emptyState) {
+                emptyState.remove();
+                const div = document.createElement('div');
+                div.id = 'textList';
+                document.querySelector('.card:nth-child(4)').appendChild(div);
+            }
+
+            const item = document.createElement('div');
+            item.className = 'text-item';
+            item.dataset.id = text.id;
+            item.innerHTML = `
+                <div class="content">${escapeHtml(text.content)}</div>
+                <div class="footer">
+                    <span class="time">${text.time}</span>
+                    <div>
+                        <button class="btn btn-small" onclick="copyText(this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+                            </svg>
+                            复制
+                        </button>
+                        <button class="btn btn-small btn-danger" onclick="deleteText('${text.id}')">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                            </svg>
+                            删除
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            const list = document.getElementById('textList');
+            list.insertBefore(item, list.firstChild);
         }
 
         // 删除文字
@@ -470,7 +751,23 @@
                 .then(data => {
                     if (data.success) {
                         showToast('已删除');
-                        location.reload();
+                        const item = document.querySelector(`.text-item[data-id="${id}"]`);
+                        if (item) item.remove();
+
+                        // 如果列表为空，显示空状态
+                        const textList = document.getElementById('textList');
+                        if (textList && textList.children.length === 0) {
+                            textList.remove();
+                            const card = document.querySelector('.card:nth-child(4)');
+                            card.innerHTML += `
+                                <div class="empty">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+                                    </svg>
+                                    <p>暂无分享的文字</p>
+                                </div>
+                            `;
+                        }
                     }
                 });
         }
