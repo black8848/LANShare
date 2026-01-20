@@ -19,15 +19,43 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
+        }
+
+        .grid-layout {
+            display: grid;
+            gap: 20px;
+        }
+
+        @media (min-width: 1024px) {
+            .grid-layout {
+                grid-template-columns: 1fr 1fr;
+            }
         }
 
         h1 {
             text-align: center;
-            color: #333;
             margin-bottom: 30px;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        h1 svg {
+            width: 32px;
+            height: 32px;
+            color: #4a90d9;
+        }
+
+        .title-text {
+            background: linear-gradient(135deg, #4a90d9, #67b26f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .card {
@@ -43,6 +71,51 @@
             color: #666;
             margin-bottom: 16px;
             font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            background: #e5e5e5;
+            color: #666;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* 批量操作 */
+        .batch-bar {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: #f0f7ff;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .batch-bar.show {
+            display: flex;
+        }
+
+        .batch-bar span {
+            flex: 1;
+            font-size: 14px;
+            color: #4a90d9;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #4a90d9;
         }
 
         /* 上传区域 */
@@ -301,8 +374,8 @@
                 color: #e5e5e5;
             }
 
-            h1 {
-                color: #f5f5f5;
+            h1 svg {
+                color: #5a9fe9;
             }
 
             .card {
@@ -377,6 +450,19 @@
                 color: #666;
             }
 
+            .badge {
+                background: #444;
+                color: #aaa;
+            }
+
+            .batch-bar {
+                background: #2a3a4a;
+            }
+
+            .batch-bar span {
+                color: #5a9fe9;
+            }
+
             .progress-bar {
                 background: #333;
             }
@@ -389,49 +475,71 @@
 </head>
 <body>
     <div class="container">
-        <h1>内网传输</h1>
+        <h1>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
+            </svg>
+            <span class="title-text">LANShare</span>
+        </h1>
 
-        <!-- 上传文件 -->
-        <div class="card">
-            <h2>上传文件</h2>
-            <div class="upload-zone" id="uploadZone">
-                <p>点击或拖拽文件到这里上传</p>
-                <input type="file" id="fileInput" multiple>
-                <button class="btn">
+        <!-- 输入区域 -->
+        <div class="grid-layout">
+            <!-- 上传文件 -->
+            <div class="card">
+                <h2>上传文件</h2>
+                <div class="upload-zone" id="uploadZone">
+                    <p>点击或拖拽文件到这里上传</p>
+                    <input type="file" id="fileInput" multiple>
+                    <button class="btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                        </svg>
+                        选择文件
+                    </button>
+                </div>
+                <div class="progress" id="progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">上传中...</div>
+                </div>
+            </div>
+
+            <!-- 分享文字 -->
+            <div class="card">
+                <h2><label for="textInput">分享文字</label></h2>
+                <textarea class="text-input" id="textInput" placeholder="粘贴或输入要分享的文字..." aria-describedby="textHint"></textarea>
+                <small id="textHint" class="hint">按 Ctrl+Enter 快速发送</small>
+                <button class="btn" onclick="addText()">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
                     </svg>
-                    选择文件
+                    分享
                 </button>
             </div>
-            <div class="progress" id="progress">
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <!-- 列表区域 -->
+        <div class="grid-layout">
+            <!-- 文件列表 -->
+            <div class="card" id="fileCard">
+                <h2>文件列表 <span class="badge" id="fileCount">{{ files|length }}</span></h2>
+                <div class="batch-bar" id="batchBar">
+                    <input type="checkbox" class="checkbox" id="selectAll" onchange="toggleSelectAll()">
+                    <span><span id="selectedCount">0</span> 个已选</span>
+                    <button class="btn btn-small btn-danger" onclick="batchDelete()">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                        </svg>
+                        删除
+                    </button>
+                    <button class="btn btn-small" onclick="cancelSelect()">取消</button>
                 </div>
-                <div class="progress-text" id="progressText">上传中...</div>
-            </div>
-        </div>
-
-        <!-- 分享文字 -->
-        <div class="card">
-            <h2><label for="textInput">分享文字</label></h2>
-            <textarea class="text-input" id="textInput" placeholder="粘贴或输入要分享的文字..." aria-describedby="textHint"></textarea>
-            <small id="textHint" class="hint">按 Ctrl+Enter 快速发送</small>
-            <button class="btn" onclick="addText()">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                </svg>
-                分享
-            </button>
-        </div>
-
-        <!-- 文件列表 -->
-        <div class="card">
-            <h2>文件列表</h2>
             {% if files %}
             <ul class="list" id="fileList">
                 {% for file in files %}
                 <li class="list-item">
+                    <input type="checkbox" class="checkbox file-checkbox" data-name="{{ file.name }}" onchange="updateSelection()">
                     <div class="info">
                         <div class="name">{{ file.name }}</div>
                         <div class="meta">{{ file.size }} · {{ file.time }}</div>
@@ -461,11 +569,11 @@
                 <p>暂无文件</p>
             </div>
             {% endif %}
-        </div>
+            </div>
 
-        <!-- 文字列表 -->
-        <div class="card">
-            <h2>分享的文字</h2>
+            <!-- 文字列表 -->
+            <div class="card" id="textCard">
+                <h2>分享的文字 <span class="badge" id="textCount">{{ texts|length }}</span></h2>
             {% if texts %}
             <div id="textList">
                 {% for text in texts %}
@@ -499,6 +607,7 @@
                 <p>暂无分享的文字</p>
             </div>
             {% endif %}
+            </div>
         </div>
     </div>
 
@@ -600,20 +709,21 @@
 
         // 添加文件到列表
         function addFileToList(file) {
-            const fileList = document.getElementById('fileList');
-            const emptyState = document.querySelector('.card:nth-child(3) .empty');
+            const fileCard = document.getElementById('fileCard');
+            const emptyState = fileCard.querySelector('.empty');
 
             if (emptyState) {
                 emptyState.remove();
                 const ul = document.createElement('ul');
                 ul.className = 'list';
                 ul.id = 'fileList';
-                document.querySelector('.card:nth-child(3)').appendChild(ul);
+                fileCard.appendChild(ul);
             }
 
             const li = document.createElement('li');
             li.className = 'list-item';
             li.innerHTML = `
+                <input type="checkbox" class="checkbox file-checkbox" data-name="${escapeHtml(file.name)}" onchange="updateSelection()">
                 <div class="info">
                     <div class="name">${escapeHtml(file.name)}</div>
                     <div class="meta">${file.size} · ${file.time}</div>
@@ -636,6 +746,19 @@
 
             const list = document.getElementById('fileList');
             list.insertBefore(li, list.firstChild);
+            updateFileCount(1);
+        }
+
+        // 更新文件计数
+        function updateFileCount(delta) {
+            const badge = document.getElementById('fileCount');
+            badge.textContent = parseInt(badge.textContent) + delta;
+        }
+
+        // 更新文字计数
+        function updateTextCount(delta) {
+            const badge = document.getElementById('textCount');
+            badge.textContent = parseInt(badge.textContent) + delta;
         }
 
         // HTML 转义
@@ -658,14 +781,15 @@
                         items.forEach(item => {
                             if (item.querySelector('.name').textContent === filename) {
                                 item.remove();
+                                updateFileCount(-1);
                             }
                         });
                         // 如果列表为空，显示空状态
                         const fileList = document.getElementById('fileList');
                         if (fileList && fileList.children.length === 0) {
                             fileList.remove();
-                            const card = document.querySelector('.card:nth-child(3)');
-                            card.innerHTML += `
+                            const fileCard = document.getElementById('fileCard');
+                            fileCard.innerHTML += `
                                 <div class="empty">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
@@ -704,14 +828,14 @@
 
         // 添加文字到列表
         function addTextToList(text) {
-            const textList = document.getElementById('textList');
-            const emptyState = document.querySelector('.card:nth-child(4) .empty');
+            const textCard = document.getElementById('textCard');
+            const emptyState = textCard.querySelector('.empty');
 
             if (emptyState) {
                 emptyState.remove();
                 const div = document.createElement('div');
                 div.id = 'textList';
-                document.querySelector('.card:nth-child(4)').appendChild(div);
+                textCard.appendChild(div);
             }
 
             const item = document.createElement('div');
@@ -740,6 +864,7 @@
 
             const list = document.getElementById('textList');
             list.insertBefore(item, list.firstChild);
+            updateTextCount(1);
         }
 
         // 删除文字
@@ -753,13 +878,14 @@
                         showToast('已删除');
                         const item = document.querySelector(`.text-item[data-id="${id}"]`);
                         if (item) item.remove();
+                        updateTextCount(-1);
 
                         // 如果列表为空，显示空状态
                         const textList = document.getElementById('textList');
                         if (textList && textList.children.length === 0) {
                             textList.remove();
-                            const card = document.querySelector('.card:nth-child(4)');
-                            card.innerHTML += `
+                            const textCard = document.getElementById('textCard');
+                            textCard.innerHTML += `
                                 <div class="empty">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
@@ -794,6 +920,79 @@
                 addText();
             }
         });
+
+        // 批量选择相关
+        function updateSelection() {
+            const checkboxes = document.querySelectorAll('.file-checkbox:checked');
+            const count = checkboxes.length;
+            document.getElementById('selectedCount').textContent = count;
+
+            const batchBar = document.getElementById('batchBar');
+            if (count > 0) {
+                batchBar.classList.add('show');
+            } else {
+                batchBar.classList.remove('show');
+            }
+
+            // 更新全选状态
+            const allCheckboxes = document.querySelectorAll('.file-checkbox');
+            const selectAll = document.getElementById('selectAll');
+            selectAll.checked = allCheckboxes.length > 0 && checkboxes.length === allCheckboxes.length;
+        }
+
+        function toggleSelectAll() {
+            const selectAll = document.getElementById('selectAll');
+            const checkboxes = document.querySelectorAll('.file-checkbox');
+            checkboxes.forEach(cb => cb.checked = selectAll.checked);
+            updateSelection();
+        }
+
+        function cancelSelect() {
+            document.querySelectorAll('.file-checkbox').forEach(cb => cb.checked = false);
+            document.getElementById('selectAll').checked = false;
+            updateSelection();
+        }
+
+        function batchDelete() {
+            const checkboxes = document.querySelectorAll('.file-checkbox:checked');
+            const files = Array.from(checkboxes).map(cb => cb.dataset.name);
+
+            if (files.length === 0) return;
+            if (!confirm(`确定删除 ${files.length} 个文件？`)) return;
+
+            fetch('/delete-batch', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ files })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(`已删除 ${data.deleted.length} 个文件`);
+                    data.deleted.forEach(filename => {
+                        const cb = document.querySelector(`.file-checkbox[data-name="${filename}"]`);
+                        if (cb) cb.closest('.list-item').remove();
+                    });
+                    updateFileCount(-data.deleted.length);
+                    cancelSelect();
+
+                    // 如果列表为空，显示空状态
+                    const fileList = document.getElementById('fileList');
+                    if (fileList && fileList.children.length === 0) {
+                        fileList.remove();
+                        const fileCard = document.getElementById('fileCard');
+                        fileCard.innerHTML += `
+                            <div class="empty">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+                                </svg>
+                                <p>暂无文件</p>
+                            </div>
+                        `;
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>

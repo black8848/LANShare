@@ -110,6 +110,23 @@ def delete_file(filename):
     return jsonify({'error': '文件不存在'}), 404
 
 
+@app.route('/delete-batch', methods=['POST'])
+def delete_files_batch():
+    """批量删除文件"""
+    data = request.get_json()
+    if not data or 'files' not in data:
+        return jsonify({'error': '没有文件'}), 400
+
+    deleted = []
+    for filename in data['files']:
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        if os.path.exists(filepath):
+            os.remove(filepath)
+            deleted.append(filename)
+
+    return jsonify({'success': True, 'deleted': deleted})
+
+
 @app.route('/text', methods=['POST'])
 def add_text():
     """添加文字"""
